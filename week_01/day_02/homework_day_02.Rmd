@@ -1,0 +1,59 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+```
+
+```{r}
+#**Question 1.**
+library(CodeClanData)
+```
+
+```{r}
+view(drinks_content)
+```
+
+```{r}
+summary(drinks_content)
+```
+```{r}
+names(drinks_content)
+```
+
+```{r}
+#**Question 2.**
+select(drinks_content, Beverage_category , Beverage,Beverage_prep,Calories)
+```
+```{r}
+mutate(drinks_content,Calories!=is.na(Calories), na.rm=TRUE)
+```
+```{r}
+#**Question 3.**
+mutate(drinks_content, calorie_diff=135-Calories)
+```
+```{r}
+#**Question 4.**
+ drinks_content %>%
+  filter( !is.na(Calories)) %>%
+  group_by( Beverage_category) %>%
+    summarise( Count = n(), Mean = mean(Calories)) %>%
+arrange(desc(Mean))
+
+```
+```{r}
+#**Question 5.**
+drinks_content %>%
+  filter( !is.na(Calories)) %>%
+  group_by( Beverage_prep) %>%
+  summarise( Average_calories = mean(Calories)) 
+```
+
+```{r}
+#**Question 7.**
+filter(drinks_content,Beverage %in% "coffee") %>%
+  group_by(Calories)%>%
+    
+```
+
