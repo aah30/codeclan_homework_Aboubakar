@@ -1,0 +1,50 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+#Question 1.
+
+library(tidyverse)
+
+movies_data<- read_csv("data/movies.csv")
+```
+
+```{r}
+glimpse(movies_data)
+dim(movies_data)
+```
+```{r}
+ movies_data%>%
+   names()
+```
+
+```{r}
+#Question 2.
+movies_selected <-movies_data%>%
+  select(title,runtime,budget)
+movies_selected
+```
+```{r}
+#Question 3. trying to find any missung value at any coaulm by or '|'
+missing_title<-movies_selected%>%
+  filter(is.na(title)|is.na(runtime)|is.na(budget))
+missing_title
+```
+```{r}
+#Question 4.
+movies_runtime <-movies_selected %>%
+  mutate(runtime = na_if(runtime, "0"))
+         
+         movies_runtime%>%
+           filter(is.na(runtime))%>%
+           summarise(count=n())
+```
+```{r}
+#Question 5.
+movies_imputed <- movies_runtime %>%
+ mutate(runtime=coalesce(runtime,median(runtime,na.rm = TRUE)))
+
+movies_imputed
+```
+
