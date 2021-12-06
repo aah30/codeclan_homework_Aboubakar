@@ -1,0 +1,94 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+#First steps reading data
+library(tidyverse)
+books_data <- read_csv("data/books.csv")
+
+```
+```{r}
+glimpse(books_data)
+
+dim(books_data)
+
+names(books_data)
+
+head(books_data)
+
+tail(books_data)
+```
+```{r}
+# Trying to find any missing value in the whole data using across function
+missing_values <- books_data %>% 
+  summarise(
+    across(
+      .cols = everything(), 
+      .fns = ~sum(is.na(.x))
+    )
+  )
+
+missing_values %>% 
+  pull()
+```
+
+
+```{r}
+# the names of the data need to be renamed as some of them has long name such as rowid and bookID
+books_data <- books_data %>% 
+  rename(
+    row_id  = rowid, 
+    book_id = bookID, 
+    isbn_13 = isbn13
+    )
+
+books_data %>% 
+  names()
+```
+
+```{r}
+# I am trying to grouping and summirising the books by title , authors and average rating by desc order 
+books_data %>% 
+  group_by(title) %>% 
+  summarise(
+    authors    = authors, 
+    ave_rating = average_rating
+    ) %>% 
+  arrange(desc(ave_rating))
+```
+
+```{r}
+# I am trying to grouping and summirising the books by title , authors and average rating by  order 
+books_data %>% 
+  group_by(title) %>% 
+  summarise(
+    authors    = authors, 
+    ave_rating = average_rating, 
+    publication_date
+    ) %>% 
+  arrange(ave_rating)
+```
+
+```{r}
+# here I am trying to change the date format column
+books_data <- books_data %>% 
+mutate(
+  publication_date, 
+  publication_date = as.Date(publication_date, format = "%m/%d/%y")
+  )
+```
+
+```{r}
+# Trying to change the format of isbn and isbn_13, but found that isbn has charachter X at the end of the number. when I change it to numerical I end up with NA. So first I used gsub function to remove the letter than change it to numerical
+books_data %>% 
+mutate(isbn = gsub('.{1}$', '', isbn)) %>% 
+  mutate(
+    isbn_13 = as.numeric(isbn_13),
+    isbn    = as.numeric(isbn),
+    row_id  = as.integer(row_id), # Also changing the row_id and book_id to integer 
+    book_id = as.integer(book_id))  
+
+```
+
