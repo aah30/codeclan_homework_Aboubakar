@@ -1,0 +1,73 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+card_base        <- read_csv("data/CardBase.csv")
+customer_base    <- read_csv("data/CustomerBase.csv")
+transection_base <- read_csv("data/TransactionBase.csv")
+fraud_base       <- read_csv("data/FraudBase.csv")
+```
+
+```{r}
+#Question 1 cleanning the 4 dataset column names.
+card_base <- card_base %>% 
+   clean_names()
+
+customer_base <- customer_base %>% 
+  clean_names()
+
+transection_base <- transection_base %>% 
+  clean_names()
+
+fraud_base <- fraud_base %>% 
+  clean_names()
+```
+
+
+```{r}
+# Question 2 Join the data containing card details and customer details by customer id
+
+card_and_customer_details <- inner_join(card_base, customer_base, by = "cust_id")
+ # group_by(new_data, cust_id) %>% 
+ #   summarise(no = n())
+
+```
+
+
+```{r}
+#Question 3 Join the data containing fraud details with transaction details 
+
+full_join(fraud_base, transection_base)
+```
+
+```{r}
+#Question 4 Join the data containing card details with transaction detai
+transection_base %>% 
+  rename(card_number = credit_card_id) %>% 
+left_join(card_base, transection_base, by = "card_number")
+```
+
+```{r}
+# Question 5 Read in hat_observations and separate observation into two columns, hat_colour and hat_type
+hat_observations <- read_csv("data/hat_observations.csv") 
+
+hat_observations <- hat_observations %>% 
+separate(observation,
+         into = c("hat_colour", "hat_type")
+         )
+```
+
+```{r}
+# Question 6 Unite day, month, and year columns into a column called date using a suitable separator. Then find the date where the most berets were observed.
+
+hat_observations <- hat_observations %>% 
+unite(date, c("day", "month", "year"), sep = "-")
+
+# hat_observations %>% 
+#   distinct(date)
+```
+
