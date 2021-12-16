@@ -109,8 +109,8 @@ ORDER BY  count(e.id);
 --Calculate the total_day_charge for each team.
 
 select  
-    t.*,
-    count(e.team_id) AS num_employe,
+    t."name" ,
+  --  count(e.team_id) AS num_employe,
 cast(t.charge_cost as int) * count(e.team_id) as total_day_charge
 from teams as t left join employees as e
 on t.id = e.team_id
@@ -134,3 +134,18 @@ ON t.id = e.team_id
 GROUP BY  t.id
 ) AS t
 WHERE total_day_charge > 5000
+
+--6b
+
+SELECT 
+count(*) -(--from a answer d12 note)
+
+FROM employees e 
+
+
+--- Howerd answer 6b
+SELECT 
+    count(e.id)
+FROM employees e 
+WHERE e.id NOT IN 
+(SELECT ec.employee_id FROM employees_committees ec)
