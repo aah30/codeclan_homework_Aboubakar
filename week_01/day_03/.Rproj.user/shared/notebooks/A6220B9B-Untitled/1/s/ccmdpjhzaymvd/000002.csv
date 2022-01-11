@@ -1,0 +1,10 @@
+"0","```r
+#all in one
+students_big %>%
+  mutate(handed=if_else(handed==\"R\",
+                        \"Right\",
+                        \"Left\"),
+         favourite_physical_activity=if_else(favourite_physical_activity==\"Football/Soccer\",
+                                             \"Football\",
+                                             favourite_physical_activity))
+```"

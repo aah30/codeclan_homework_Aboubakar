@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1638396951369.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3750763053",
+    "id" : "877A887E",
+    "lastKnownWriteTime" : 1638649847,
+    "last_content_update" : 1638649847822,
+    "path" : "~/Documents/codeclan/codeclan_homework_Aboubakar/codeclan_homework_Aboubakar/week_01/day_03/homework_day_03.Rmd",
+    "project_path" : "homework_day_03.Rmd",
+    "properties" : {
+        "chunk_output_type" : "inline",
+        "cursorPosition" : "21,6",
+        "scrollLine" : "15",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

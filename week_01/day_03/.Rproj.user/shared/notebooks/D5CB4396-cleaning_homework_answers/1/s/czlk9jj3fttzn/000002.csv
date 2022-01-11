@@ -1,0 +1,4 @@
+"0","movies_selected %>% "
+"0","  summarise(na_runtime = sum(is.na(runtime)),"
+"0","            na_title = sum(is.na(title)),"
+"0","            na_budget = sum(is.na(budget)))"

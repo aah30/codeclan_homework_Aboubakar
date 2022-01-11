@@ -1,0 +1,11 @@
+"0","```r
+#case_when()
+students_big %>%
+  select(ageyears)%>%
+  mutate(age_divisible=case_when(
+    ageyears %% 2==0 ~\"Even\",
+    ageyears %% 3==0 ~\"Diivisible by 3\",
+    ageyears %% 5==0 ~ \"Diivisible by 5\",
+    TRUE ~ \"other number\"
+  ))
+```"

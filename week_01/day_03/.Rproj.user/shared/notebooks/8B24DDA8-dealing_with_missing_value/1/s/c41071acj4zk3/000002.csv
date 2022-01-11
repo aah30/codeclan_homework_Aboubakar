@@ -1,0 +1,10 @@
+"0","```r
+charges_numeric<- comms_data_imputed_median %>%
+  mutate(total_charges=as.numeric(total_charges))
+```"
+"1","NAs introduced by coercion
+"
+"0","```r
+charges_numeric %>%
+  filter(is.na(total_charges))
+```"

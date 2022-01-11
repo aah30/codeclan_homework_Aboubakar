@@ -1,0 +1,10 @@
+"0","```r
+library(janitor)
+```"
+"1","
+Attaching package: ‘janitor’
+
+The following objects are masked from ‘package:stats’:
+
+    chisq.test, fisher.test
+"

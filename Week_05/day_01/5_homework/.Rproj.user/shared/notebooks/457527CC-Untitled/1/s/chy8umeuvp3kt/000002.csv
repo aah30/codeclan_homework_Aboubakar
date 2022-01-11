@@ -1,0 +1,8 @@
+"0","```r
+monthly_sales %>% 
+ ggplot()+
+  aes(x =branch, y = sales, fill = month)+
+  geom_col(position = \"dodge\") +
+ #scale_y_continuous(labels = scales::comma)+
+    coord_flip()
+```"

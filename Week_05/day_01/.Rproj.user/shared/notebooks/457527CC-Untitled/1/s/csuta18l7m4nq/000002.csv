@@ -1,0 +1,9 @@
+"0","```r
+monthly_sales %>% 
+  mutate(sales_thousands = sales) %>% 
+ggplot()+
+  aes(x =branch, y = sales_thousands, fill = month)+
+  geom_col(position = \"dodge\") +
+  labs(y =\" Sales (1000 Units)\") +
+  coord_flip()
+```"

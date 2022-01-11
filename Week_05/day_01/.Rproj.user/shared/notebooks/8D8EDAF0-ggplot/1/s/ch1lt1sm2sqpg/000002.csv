@@ -1,0 +1,10 @@
+"0","```r
+count_data <- students %>% 
+  group_by(superpower, school_year) %>% 
+  summarise(counts= n())
+```"
+"1","`summarise()` has grouped output by 'superpower'. You can override using the `.groups` argument.
+"
+"0","```r
+count_data
+```"

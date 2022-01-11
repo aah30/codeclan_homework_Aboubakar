@@ -1,0 +1,7 @@
+"0","```r
+ggplot(pets)+
+       aes(y=animal, fill=sex, 
+          
+           )+
+  geom_bar()
+```"

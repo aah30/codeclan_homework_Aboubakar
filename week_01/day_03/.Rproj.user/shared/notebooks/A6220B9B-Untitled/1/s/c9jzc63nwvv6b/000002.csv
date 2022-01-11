@@ -1,0 +1,8 @@
+"0","```r
+students_big%>%
+  select(travel_to_school)%>%
+  mutate(travel_to_school=recode(travel_to_school,
+                                 \"Bus\"=\"bus\",
+                                 \"Car\"=\"car\",
+                                 \"Walk\"=\"walk\"))
+```"

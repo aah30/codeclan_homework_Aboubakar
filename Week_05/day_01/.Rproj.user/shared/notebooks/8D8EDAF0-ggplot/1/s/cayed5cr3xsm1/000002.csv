@@ -1,0 +1,12 @@
+"0","```r
+ggplot(students)+
+  geom_bar(aes(x = superpower,
+               fill = school_year)) +
+  labs(
+   x = \"\nSuperpower\",
+   y = \"Count\",
+   title =\" Preferred superpower by school year\",
+   subtitle = \"Data from students around the world\n\",
+   fill = \"School Year\"
+  )
+```"

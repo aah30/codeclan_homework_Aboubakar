@@ -1,0 +1,191 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+students <- read_csv("data/students.csv")
+```
+
+```{r}
+students %>% 
+  head()
+```
+
+```{r}
+ggplot(students)+ 
+  geom_bar(aes(x= superpower),
+           fill = "light blue",
+           colour = "red")
+```
+
+
+```{r}
+ggplot(students)+ 
+  geom_bar(aes(x= superpower,
+           fill = school_year),
+          # position = "dodge",
+           position = position_dodge2())
+```
+
+```{r}
+count_data <- students %>% 
+  group_by(superpower, school_year) %>% 
+  summarise(counts= n())
+count_data
+```
+
+
+
+```{r}
+ggplot(count_data)+
+  geom_bar(aes(x = superpower, y = counts,
+               fill = school_year),
+           stat = "identity")
+```
+
+
+```{r}
+ggplot(count_data,
+   aes(x = superpower, y = counts,
+               fill = school_year)) +
+  geom_col()
+           
+```
+
+
+```{r}
+ggplot(students)+
+  geom_bar(aes(x = superpower,
+               fill = school_year)) +
+  labs(
+   x = "\nSuperpower",
+   y = "Count",
+   title =" Preferred superpower by school year",
+   subtitle = "Data from students around the world\n",
+   fill = "School Year"
+  )
+```
+
+```{r}
+olympics_overall_medals <- read_csv("data/olympics_overall_medals.csv")
+```
+
+```{r}
+top_10 <- olympics_overall_medals %>% 
+filter (season == "Summer", medal == "Gold") %>% 
+arrange (desc (count) ) %>% 
+top_n(10)
+top_10
+```
+
+```{r}
+# Task
+ggplot(top_10)+
+  geom_col(aes(x =reorder( team, count), y = count,
+               fill = team)) +
+  labs(
+    x = "countries",
+    y = "count",
+    title = "Top 10 olympic teams",
+    fill = "Team"
+  )
+```
+
+
+```{r}
+library(janitor)
+```
+
+```{r}
+chick_weight <- clean_names(ChickWeight)
+
+head(chick_weight)
+```
+
+
+
+```{r}
+ggplot(chick_weight)+
+  geom_line(aes(x= time,
+                y= weight,
+                group = chick,
+                colour = diet)) +
+  geom_point( aes(x= time,
+                y= weight,
+                 colour = diet))
+```
+
+
+```{r}
+# same above
+ggplot(chick_weight,
+   aes(x= time,
+                y= weight,
+                colour = diet)) +
+  geom_line(aes( group = chick),
+            alpha =0.25) +
+  geom_point(alpha =0.25) +
+  geom_smooth()
+```
+
+# Task 1
+```{r}
+ggplot(students, aes(x     = height_cm,
+                y     =  reaction_time)) +
+  geom_line(aes(group = height_cm),
+                alpha = 0.25)  +
+  geom_point(   alpha = 0.5 ) +
+  geom_smooth()
+```
+
+```{r}
+ggplot(students) +
+  geom_point(aes(x = height_cm,
+                 y = reaction_time,
+                 fill = superpower,
+                 colour = superpower), 
+             )
+```
+
+
+```{r}
+pets <- read_csv("data/pets.csv")
+```
+
+#lucy
+```{r} 
+ggplot(pets,
+       aes(x = age,
+           y = weight, 
+           )) +
+  geom_point(aes(colour = sex, 
+           shape = animal,
+   size = 4
+   )) +
+  #geom_text(label = rownames(pets))
+ geom_text(aes(label = name),
+        nudge_x = 0.5,
+        nudge_y = 0.1,
+        data = pets %>% filter(name == "Fluffy"
+                               ))
+           
+```
+
+
+```{r}
+ggsave("g1_sav.pdf")
+```
+
+
+
+
+
+
+
+

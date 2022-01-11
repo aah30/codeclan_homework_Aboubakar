@@ -1,0 +1,8 @@
+"0","```r
+#Change the column handed to to “Right” and “Left” instead or “R” and “L”.
+students_big %>%
+  #select(handed) %>%
+  mutate(handed=if_else(handed==\"R\",
+                        \"Right\",
+                        \"Left\"))
+```"

@@ -1,0 +1,6 @@
+"0","```r
+ggplot(students)+ 
+  geom_bar(aes(x= superpower),
+           fill = \"light blue\",
+           colour = \"red\")
+```"

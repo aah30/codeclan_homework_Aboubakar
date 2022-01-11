@@ -1,0 +1,7 @@
+"0","```r
+students_big %>%
+  select(gender) %>%
+  mutate(gender= if_else(gender==\"M\",
+                         \"Male\",
+                         \"Femal\"))
+```"

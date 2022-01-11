@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1641850995373.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1907626514",
+    "id" : "702D3C15",
+    "lastKnownWriteTime" : 1641892783,
+    "last_content_update" : 1641892783982,
+    "path" : "~/Documents/codeclan/codeclan_work/Week_5/day_01/5_homework/homework.Rmd",
+    "project_path" : "homework.Rmd",
+    "properties" : {
+        "chunk_output_type" : "inline",
+        "cursorPosition" : "45,7",
+        "scrollLine" : "38",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

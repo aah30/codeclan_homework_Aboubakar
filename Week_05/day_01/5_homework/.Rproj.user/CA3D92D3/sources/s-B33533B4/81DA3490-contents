@@ -1,0 +1,91 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+pets <- read_csv("data/pets.csv")
+```
+
+
+```{r}
+ggplot(pets)+
+       aes(age, weight, 
+          colour= sex ,
+           )+
+geom_point() +
+  scale_x_continuous(breaks = 1:13) +
+  scale_y_continuous(breaks = c(5,7,9,11))
+```
+
+
+```{r}
+ggplot(pets)+
+       aes(age, weight, 
+          colour= sex ,
+           )+
+geom_point() +
+  scale_x_continuous(breaks = 1:13,
+                     limits = c(1,8)) +
+  scale_y_continuous(breaks = c(6,8,10),
+                     limits = c(NA,8)) 
+```
+
+```{r}
+ggplot(pets)+
+       aes(age, weight, 
+          colour= sex ,
+           )+
+geom_point() +
+  xlim(1,8)
+```
+
+
+```{r}
+ggplot(pets)+
+       aes(y=animal, fill=sex, 
+          
+           )+
+  geom_bar()
+```
+
+
+```{r}
+monthly_sales <- read_csv("data/monthly_sales.csv")
+
+monthly_sales <- monthly_sales %>% 
+  mutate(month = factor(month, 
+                        levels = c("Jan", "Feb", "March","April")))
+
+
+ggplot(monthly_sales)+
+  aes(x =branch, y = sales, fill = month)+
+  geom_col(position = "dodge") +
+  coord_flip()
+```
+
+
+```{r}
+monthly_sales %>% 
+ ggplot()+
+  aes(x =branch, y = sales, fill = month)+
+  geom_col(position = "dodge") +
+ #scale_y_continuous(labels = scales::comma)+
+    coord_flip()
+```
+
+
+```{r}
+monthly_sales %>% 
+  mutate(sales_thousands = sales) %>% 
+ggplot()+
+  aes(x =branch, y = sales_thousands, fill = month)+
+  geom_col(position = "dodge") +
+  labs(y =" Sales (1000 Units)") +
+  coord_flip()
+```
+
+
+
+

@@ -1,0 +1,5 @@
+"0","comms_data %>%"
+"0","  summarise(count= sum(is.na(monthly_charges)))"
+"2","Error in summarise(., count = sum(is.na(monthly_charges))) : 
+  object 'comms_data' not found
+"

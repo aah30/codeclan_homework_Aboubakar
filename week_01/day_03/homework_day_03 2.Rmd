@@ -24,28 +24,17 @@ dim(movies_data)
 movies_selected <-movies_data%>%
   select(title,runtime,budget)
 movies_selected
-#####
-movies_selected %>% 
-  summarise(na_runtime = sum(is.na(runtime)),
-            na_title = sum(is.na(title)),
-            na_budget = sum(is.na(budget)))
-
-# OR
-
-movies_selected %>% 
-  summarise(across(.fns = ~sum(is.na(.x))))
-#####
 ```
 ```{r}
 #Question 3. trying to find any missung value at any coaulm by or '|'
-missing_title<-movies_selected%>%
+missing_value<-movies_selected%>%
   filter(is.na(title)|is.na(runtime)|is.na(budget))
-missing_title
+missing_value
 ```
 ```{r}
 #Question 4.
 movies_runtime <-movies_selected %>%
-  mutate(runtime = na_if(runtime, "0"))
+  mutate(runtime = na_if(runtime, "0")) #0 not "0"
          
          movies_runtime%>%
            filter(is.na(runtime))%>%

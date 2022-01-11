@@ -1,0 +1,4 @@
+"0","qb_competitors %>% "
+"0","   ggplot()+"
+"0","  aes(x = Company, y = Revenue )+"
+"0","  geom_area()"

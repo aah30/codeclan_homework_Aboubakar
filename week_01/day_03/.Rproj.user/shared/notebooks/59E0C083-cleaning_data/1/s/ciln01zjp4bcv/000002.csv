@@ -1,0 +1,9 @@
+"0","```r
+video_games_janitor_clean<- video_games %>%
+  clean_names()
+video_games_janitor_clean %>%
+  names()
+```"
+"1","[1] \"customer_id\"   \"game_name\"     \"what\"          \"value\"        
+[5] \"bought_online\"
+"

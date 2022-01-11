@@ -1,0 +1,5 @@
+"0","```r
+comms_data_imputed_mean<- comms_data %>%
+ mutate(monthly_charges=coalesce(monthly_charges,mean(monthly_charges,na.rm = TRUE)))
+comms_data_imputed_mean
+```"

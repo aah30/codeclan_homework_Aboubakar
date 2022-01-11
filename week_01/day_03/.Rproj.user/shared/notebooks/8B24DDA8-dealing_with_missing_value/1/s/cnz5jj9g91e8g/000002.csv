@@ -1,0 +1,5 @@
+"0","```r
+#1- remove them (drop na)
+comms_data %>%
+  drop_na()
+```"

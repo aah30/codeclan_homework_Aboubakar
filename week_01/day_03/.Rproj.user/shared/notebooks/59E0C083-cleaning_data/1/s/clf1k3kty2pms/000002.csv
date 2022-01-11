@@ -1,0 +1,11 @@
+"0","```r
+video_games_rename <- video_games_janitor_clean %>% 
+ rename(\"game_title\"=\"game_name\",
+        \"activity\"=\"what\",
+        \"playing_hours\"=\"value\")
+video_games_rename %>% 
+  names()
+```"
+"1","[1] \"customer_id\"   \"game_title\"    \"activity\"      \"playing_hours\"
+[5] \"bought_online\"
+"

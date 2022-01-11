@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1641852024815.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "81DA3490",
+    "lastKnownWriteTime" : 1641827961,
+    "last_content_update" : 1641827961,
+    "path" : "~/Documents/codeclan/codeclan_work/Week_5/day_01/3_scales_and_coordinates/Untitled.Rmd",
+    "project_path" : null,
+    "properties" : {
+        "chunk_output_type" : "inline",
+        "cursorPosition" : "45,0",
+        "scrollLine" : "43"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

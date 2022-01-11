@@ -1,0 +1,8 @@
+"0","```r
+#Take a look at the payment_method column and find the different type of missing value identifiers we have, and how many we have.
+#Replace these with NA, and then check if you have the right amount
+payment_method_missing_value <- comms_data_imputed_median %>%
+  
+  filter(is.na(payment_method))
+payment_method_missing_value
+```"

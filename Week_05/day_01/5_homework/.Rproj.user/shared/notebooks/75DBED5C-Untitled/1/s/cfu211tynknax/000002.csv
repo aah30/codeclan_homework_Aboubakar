@@ -1,0 +1,5 @@
+"0","```r
+chick_weight <- clean_name(ChickWeight)
+```"
+"1","Error in clean_name(ChickWeight) : could not find function \"clean_name\"
+"

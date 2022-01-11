@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1641851211753.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "3358F051",
+    "lastKnownWriteTime" : 1641823219,
+    "last_content_update" : 1641823219,
+    "path" : "~/Documents/codeclan/codeclan_work/Week_5/day_01/ggplot/ggplot.Rmd",
+    "project_path" : null,
+    "properties" : {
+        "chunk_output_type" : "inline",
+        "cursorPosition" : "89,2",
+        "scrollLine" : "69"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

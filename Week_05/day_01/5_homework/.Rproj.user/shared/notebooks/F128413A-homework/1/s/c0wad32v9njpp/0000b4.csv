@@ -1,0 +1,3 @@
+"0"," ggplot(qb_revenue_breakdown)+"
+"0","        aes(x = Year, y = Revenue, fill = Product)+"
+"0","  geom_col()"

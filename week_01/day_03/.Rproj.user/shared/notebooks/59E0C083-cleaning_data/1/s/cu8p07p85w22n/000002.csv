@@ -1,0 +1,15 @@
+"0","```r
+video_games <- read_csv(\"data/steam-200k-sample.csv\",
+                     skip = 4,
+                     col_types=cols(\"bought online\" = col_logical()),
+                      
+                     )
+```"
+"1","
+indexed 69.00B in  0s, 2.89MB/s
+indexed 1.00TB in  0s, 277.86TB/s
+                                                                              
+"
+"0","```r
+video_games
+```"

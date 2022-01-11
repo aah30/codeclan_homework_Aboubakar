@@ -1,0 +1,7 @@
+"0","```r
+replaced_missing_value <-comms_data_imputed_median %>%
+  mutate(payment_method = na_if(payment_method, \"--\"))
+         
+         replaced_missing_value%>%
+           filter(is.na(payment_method))
+```"

@@ -1,0 +1,6 @@
+"0","```r
+#2- Impute Na's replace Na observition in the monthly coulm with median
+comms_data_imputed_median <- comms_data %>%
+ mutate(monthly_charges=coalesce(monthly_charges,median(monthly_charges,na.rm = TRUE)))
+comms_data_imputed_median
+```"

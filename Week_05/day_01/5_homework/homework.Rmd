@@ -1,0 +1,57 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(CodeClanData)
+library(tidyverse)
+```
+
+# 2.1 Part 1 Question 1.
+```{r}
+ ggplot(qb_revenue_breakdown)+
+        aes(x = Year, y = Revenue, fill = Product)+
+  geom_col()
+
+```
+#Questino 2.
+```{r}
+qb_monthly_sales %>% 
+  filter(Cashflow == "Kwikbit Unit 1 Sales") %>% 
+  ggplot()+
+  aes(x = Date, y = Amount ) +
+  geom_line()+
+  labs(x = "\n Kwikbit Unit 1",
+       title = "Monthly Sales of The KwikBit Unit 1 on 2018 vs 2019")
+```
+
+
+
+#Question 3.
+
+```{r}
+qb_monthly_sales %>% 
+   ggplot()+
+  aes(x =Date , y = Amount) +
+  geom_line()
+```
+
+
+#Question 4.
+```{r}
+qb_competitors %>% 
+   ggplot()+
+  aes(x = Company, y = Revenue )+
+  geom_area()
+ 
+```
+
+
+
+
+
+
+
+
+
