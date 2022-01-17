@@ -54,7 +54,7 @@ server <- function(input, output) {
       aes(x = school_year, y = languages_spoken, fill = school_year) +  
       geom_col(show.legend = FALSE) +
       labs(
-        x = "school year",
+        x = "\nschool year",
         y = "Average languages spoken"
       )
     
