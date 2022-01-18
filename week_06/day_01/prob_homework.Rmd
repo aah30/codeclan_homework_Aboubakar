@@ -1,0 +1,87 @@
+---
+title: "prob Homework"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r, message = FALSE}
+library(prob)
+library(gtools)
+library(tidyverse)
+```
+ #1 MVP
+#1.1 The Titanic
+# Reading the data
+```{r}
+titanic_data <- read_csv("data/titanic.csv")
+titanic_data
+```
+
+```{r}
+titanic_data %>% 
+  distinct(class)
+```
+
+# Create a new column crew hold True if crew or staff and false if not
+```{r}
+titanic_data <- titanic_data %>% 
+  mutate(crew = ifelse(str_detect(class, "crew") |  str_detect(class, "staff"), TRUE, FALSE))
+
+titanic_data  
+```
+
+# The probability of being crew and survived
+```{r}
+prob_crew_servied <- titanic_data %>%
+  filter(survived == "yes", crew == TRUE) %>%
+  summarise(prob = n() / nrow(titanic_data))
+prob_crew_servied
+```
+# The probability of being survived and not crew (passenger) 
+```{r}
+prob_passenger_servied <- titanic_data %>%
+  filter(survived == "yes", crew == FALSE) %>%
+  summarise(prob = n() / nrow(titanic_data))
+prob_passenger_servied
+```
+# so the prob(crew)
+
+```{r}
+prob_crew <- titanic_data %>% 
+  filter(crew == TRUE) %>% 
+summarise(prob_crew = n() / nrow(titanic_data))
+prob_crew
+```
+
+# so the prob(passenger)
+
+```{r}
+prob_passenger <- titanic_data %>% 
+  filter(crew == FALSE) %>% 
+summarise(prob_passenger = n() / nrow(titanic_data))
+prob_passenger
+```
+
+# so prob(survived∣crew) = prob(survived ∩ crew) /prob(crew)
+```{r}
+prob_servied_given_crew <- prob_crew_servied / prob_crew
+prob_servied_given_crew
+```
+# so prob(survived∣passenger) = prob(survived ∩ passenger) /prob(passenger)
+```{r}
+prob_servied_given_passenger <- prob_passenger_servied / prob_passenger
+prob_servied_given_passenger
+```
+
+# 1.2 Probability Consolidation Questions
+# Q1 If I roll a six-sided dice once, what is the probability of getting a number less than 5?
+
+```{r}
+s_one_dice <- rolldie(1)
+
+s_one_dice %>% 
+  filter(X1 <= 5) %>% 
+  summarise(less_than_5 = n() / nrow(s_one_dice))
+```
+
