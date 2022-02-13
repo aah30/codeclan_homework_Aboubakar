@@ -1,0 +1,230 @@
+---
+title: "Debugging and reviewing tasks answers"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    df_print: paged
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+# Loading dataset
+<details>
+<summary>**Answer**</summary>
+```{r, message = FALSE, warning=FALSE}
+library(tidyverse)
+energy_scotland <- read_csv("data/energy_scotland.csv")
+energy_scotland
+```
+
+```{r,message=FALSE, warning=FALSE}
+all_salaries <- read_csv("data/all_salaries.csv")
+all_salaries
+```
+</details>
+<br>
+<br>
+ 
+# Tasks
+
+## Task 1
+<details>
+<summary>**Answer**</summary>
+```{r}
+maximum_energy <- energy_scotland %>% 
+  select(energy_prod) %>% 
+  max()
+
+energy_scotland %>%
+  filter(energy_prod == maximum_energy)
+```
+
+Issues:
+
+- If any change on the dataset energy prod column done, for example if we add number bigger than "25165.9", this code will not work, as the max value set manually  to "25165.9".
+
+- The way of the code written is not in efficient way.
+
+My change:
+
+- I make the code work dynamic whenever the values of the column change still my code find the max value.
+
+- Also I rewrite the code in efficient way as we learning in the course.
+
+</details>
+<br>
+
+## Task 2
+<details>
+<summary>**Answer**</summary>
+
+```{r}
+energy_scotland  %>% 
+  mutate(rating = case_when(
+              energy_prod > 20000 ~ "very high",
+              energy_prod > 10000 & energy_prod <= 20000 ~ "high",
+              energy_prod > 5000 & energy_prod <= 10000 ~ "medium",
+              energy_prod > 2000 & energy_prod <= 5000 ~ "low",
+                 TRUE  ~  " very low"
+    
+  )) 
+```
+
+Issues:
+
+- Its long code to answer the question, we don’t need to use bind columns and if else condition, we could do it in nice easy and efficient way.
+
+My change:
+
+- I used case when instead of if else and $ to reach variables. Also case when its easy and helpful in this case.
+
+- I used mutate function to create a new column instead of bind.
+
+</details>
+
+## Task 3
+<details>
+<summary>**Answer**</summary>
+
+```{r}
+   energy_scotland %>%
+  filter(sector %in% c("Gas", "Renewables", "Pumped hydro")) %>% 
+   ggplot() +
+  aes(x = year, y = energy_prod, group = sector, colour = sector) +
+  geom_line() +
+  scale_x_continuous(breaks = energy_scotland$year) +
+labs(title = "Energy production in Scotland over time split by sector", x = "Year", y = "Energy production")
+```
+
+Issues:
+
+- No need to do all this code to plot the graph.
+- filter function used three times to filter the sector column and store its value in three different parameters
+
+- Geom line used  three time which we do not need to do that and we could plot the graph by just one geom line
+
+My change:
+
+- Reduce the code by filtering the dataset to end up with only "Gas", "Renewables" and "Pumped hydro" sector.
+
+- Then use only one geom line adding group equal to sector will do the job instead of the geom line.
+
+
+</details>
+<br>
+
+## Task 4
+<details>
+<summary>**Answer**</summary>
+
+```{r}
+energy_scotland %>%
+  filter(sector %in% c("Coal", "Gas", "Oil")) %>%
+  group_by(sector) %>%
+  summarise(avg_energy_prod = mean(energy_prod))
+```
+
+
+Issues:
+
+- They used double equals in filter which not work in vector.
+
+My change:
+
+- I change == with %in% in filter to work probably  as == will take some not all.
+
+</details>
+
+## Task 5
+<details>
+<summary>**Answer**</summary>
+
+```{r}
+student <- tibble(
+  Name = c("Brian", "David", "Karen"),
+  age = c(25, 56, 40),
+  location = c("Scotland", "England", "scotland"),
+  `email address` = c("briang@yahoo.co.uk", "dsmith@gmail.co.uk", "karen")
+)
+
+student %>%
+  janitor::clean_names() %>%
+  select(name, location, email_address) %>%
+  mutate(
+    location    = str_to_lower(location), 
+    valid_email = str_detect(email_address, "@[a-z.]")
+        )
+```
+
+Issues:
+
+- Use select method with cleaning name before clean_name() function.
+
+- Trying to use str to lower function outside mutation
+
+- Missing ) bracket at the end of the code
+
+- The definition that was used "@a-z." to check whether  the email valid or not  is wrong.
+
+My change:
+
+- I change the order, so clean_names() first then select method.
+
+- Adding str_to_lower() to the mutate function,and assign its value to location.
+
+- Correct the pattern to check the email.
+
+- Adding the missing bracket at the end of mutate function.
+</details>
+
+
+## Task 6
+<details>
+<summary>**Answer**</summary>
+
+```{r}
+subsetting_salaries <- function(dataframe_input,job_area_input,salary_input){
+  data <- dataframe_input %>%
+    filter(
+           job_area == job_area_input, 
+           salary > salary_input
+           )
+}
+
+employees <- subsetting_salaries(all_salaries, "Human Resources", 30000)
+employees
+
+ 
+```
+
+Issues:
+
+- All_salaries dataset is not a part of CodeClanData.
+
+- Human Resources not in a an quotation.
+
+- Using select(job_area) only in the first line  in the function meaning will not able to see other columns such as salary.
+
+- Using a saving column in data1 while we need the salary, also the condition in this ine wrong, we cannot compare vector with signal parameter, in fact, we did not need to write this line of code as we cannot return two things from one function.
+
+- We need a parameter to assign the return function value to it.
+
+My change:
+
+- Remove CodeClanData from the function call
+
+- Adding employees parameter to receive the return function
+
+- Put Human Resources between quotation "".
+
+- Remove select(job_area) and data1 from the function.
+
+- Adding salary > salary_input to the filter function.
+
+
+
+</details>
