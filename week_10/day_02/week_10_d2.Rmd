@@ -1,0 +1,97 @@
+---
+title: "Homework - features and elements of multiple regression"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    df_print: paged
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+ 
+```{r}
+library(mosaicData)
+library(tidyverse)
+library(janitor)
+library(GGally)
+```
+ 
+# MVP
+## Question 1 Load the dataset
+
+<details>
+<summary>**Answer**</summary>
+```{r}
+diamonds <- read_csv("data/diamonds.csv")
+diamonds
+```
+ 
+</details>
+
+## Question 2
+<details>
+<summary>**Answer**</summary>
+
+```{r, fig.width= 15, fig.height=17 }
+#ggpairs(diamonds)
+```
+
+
+</details>
+
+
+## Question 3
+<details>
+<summary>**Answer**</summary>
+
+```{r}
+clean_diamonds <- diamonds %>% 
+  select(-x, -y, -z)
+clean_diamonds
+```
+
+</details>
+
+
+## Question 4
+<details>
+<summary>**Answer**</summary>
+
+```{r}
+model <- lm(price ~ ., data = clean_diamonds)
+#summary(model)
+
+model %>% 
+alias()
+```
+There is no aliases
+
+</details>
+
+### i
+<details>
+<summary>**Answer**</summary
+
+```{r, fig.width= 15, fig.height=17 }
+ggpairs(clean_diamonds)
+```
+
+</details>
+
+### ii
+<details>
+<summary>**Answer**</summary
+```{r}
+clean_diamonds %>%
+  ggplot(aes(x = price, y = carat)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+
+</details>
