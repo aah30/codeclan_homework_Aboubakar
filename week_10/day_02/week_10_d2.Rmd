@@ -39,6 +39,7 @@ diamonds
 
 ```{r, fig.width= 15, fig.height=17 }
 #ggpairs(diamonds)
+ggpairs(diamonds[,c("carat", "x", "y", "z")])
 ```
 
 
@@ -88,7 +89,7 @@ ggpairs(clean_diamonds)
 <summary>**Answer**</summary
 ```{r}
 clean_diamonds %>%
-  ggplot(aes(x = price, y = carat)) +
+  ggplot(aes(x = carat , y = price )) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE)
 ```

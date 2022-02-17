@@ -1,0 +1,126 @@
+---
+title: "housing in King County homework"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+ 
+ 
+```{r}
+library(tidyverse)
+library(janitor)
+library(GGally)
+```
+ 
+# Question 1
+```{r}
+kc_house <- read_csv("data/kc_house_data.csv")
+kc_house
+```
+
+ 
+```{r}
+house_clean <- kc_house %>%
+  select(-c(id, date, sqft_living, sqft_lot, sqft_living15,sqft_lot15, zipcode, lat, long))
+house_clean
+```
+ 
+  
+```{r}
+house_clean %>% 
+  summarise(across(.cols = everything(), .fns = ~ sum(is.na(.))))
+```
+
+changing grade to 5 categories from 1 to 13  
+```{r}
+house_clean <- house_clean %>% 
+  mutate(grade = case_when(
+      grade > 0 & grade <= 3 ~ "falls short",
+     grade > 3 &  grade <= 6 ~ "below average",
+                  grade == 7 ~ "average",
+      grade > 7 &  grade <= 10 ~ "above average",
+      TRUE                      ~  "high quality"
+    ))
+```
+
+changing waterfront to logical variable
+```{r}
+house_clean <- house_clean %>% 
+  mutate(waterfront = if_else(waterfront == 0, FALSE, TRUE)) 
+house_clean
+```
+ 
+ changing yr_renovated to logical variable
+```{r}
+house_clean <- house_clean %>% 
+  mutate(renovated = if_else(yr_renovated == 0, FALSE, TRUE)) %>% 
+  select(-yr_renovated)
+house_clean
+```
+ 
+ # Question 2
+ 
+```{r}
+model <- lm(price ~ ., data = house_clean)
+
+model %>% 
+alias()
+```
+ 
+```{r}
+summary(model)
+```
+ 
+ Question 3
+ 
+```{r}
+houses_tidy_numeric <- house_clean %>%
+  select_if(is.numeric)
+
+houses_tidy_nonnumeric <- house_clean %>%
+  select_if(function(x) !is.numeric(x))
+
+houses_tidy_nonnumeric$price <- house_clean$price
+
+ggpairs(houses_tidy_numeric)
+ggpairs(houses_tidy_nonnumeric)
+```
+ 
+ 
+ Now wil build a regression model containing the four main effects with price
+```{r}
+mod1a <- lm(price ~ renovated, data = house_clean)
+summary(mod1a)
+```
+```{r}
+mod2a <- lm(price ~ grade, data = house_clean)
+summary(mod2a)
+```
+ 
+```{r}
+mod3a <- lm(price ~ bedrooms, data = house_clean)
+summary(mod3a)
+```
+  the most effect for the price as R-squared 95% 
+ 
+```{r}
+mod4a <- lm(price ~ floors, data = house_clean)
+summary(mod4a)
+```
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
