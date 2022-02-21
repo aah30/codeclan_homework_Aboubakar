@@ -1,0 +1,63 @@
+---
+title: "Homework Quiz Answers"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    df_print: paged
+   # css: ../../../styles.css
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<br><br>
+
+1. I want to predict how well 6 year-olds are going to do in their final school exams. Using the following variables am I likely under-fitting, fitting well or over-fitting? Postcode, gender, reading level, score in maths test, date of birth, family income.
+<summary>**Answer**</summary>
+We need to plot the data, then check if line fits the data closest or not . Also we need to chech each of these measures:
+ adjusted \(r^2\), larger values are better (as for normal \(r^2\))
+For AIC and BIC lower numbers are better.
+
+
+
+
+2. If I have two models, one with an AIC score of 34,902 and the other with an AIC score of 33,559 which model should I use?
+<summary>**Answer**</summary>
+The model with AIC 33,559 becouse the lower number the better of the model.
+
+
+
+3. I have two models, the first with: r-squared: 0.44, adjusted r-squared: 0.43. The second with: r-squared: 0.47, adjusted r-squared: 0.41. Which one should I use?
+<summary>**Answer**</summary>
+We should use the second one with a lower adjusted R-squared 0.41, when the R-squared is higher meaning  the model fits your data. and R2 always increases when the number of variables increases, so when compare models we should look at adjusted R2 A high adjusted r-squared is the best.
+
+ 
+
+4. I have a model with the following errors: RMSE error on test set: 10.3, RMSE error on training data: 10.4. Do you think this model is over-fitting?
+<summary>**Answer**</summary>
+The answer is no, becose If the RMSE for the test set is higher than that of the training data, then we can say that is over-fitting, in this case the test is less than training.
+
+
+5. How does k-fold validation work?
+<summary>**Answer**</summary>
+K is always set to 10, K-fold cross-validation work in each time or each prosses  we will take one of the 10 fold use it as test set, and  the rest 9 fold is training the data. Finally we measure average performance across all the folds.
+
+6. What is a validation set? When do you need one?
+<summary>**Answer**</summary>
+
+A validation set is a set of data used to neither in training or to compare models against each other, we need one to test the performance of our model with the model with all parameters to see if fit or not.
+
+7. Describe how backwards selection works.
+<summary>**Answer**</summary>
+backwards method will take all the parameters in first time then backwards and remove less effect one each time.
+
+8. Describe how best subset selection works.
+
+<summary>**Answer**</summary>
+The best subsets works by comparing the all possible models using a specified set of predictors, and displays the best-fitting models that contain its predictors.
+
+

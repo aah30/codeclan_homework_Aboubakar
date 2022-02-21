@@ -1,0 +1,198 @@
+---
+title: "Scotland Cancer Analysis 2015 to 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r echo=FALSE,warning=FALSE,message=FALSE}
+library(tidyverse)
+library(janitor)
+```
+
+#Introduction
+ The report is to analysis the dataset of the NHS Scotland to help them to get know more about the type of cancer and who is efect the most by age or gender this can help planning for provision of cancer treatment services in NHS Borders.
+
+```{r echo=FALSE,warning=FALSE,message=FALSE}
+summary_of_five_years <- read_csv("row_data/5_year_Summary_scot.csv")
+```
+
+```{r echo=FALSE,warning=FALSE,message=FALSE}
+cancer_by_regin <- read_csv("row_data/by_region.csv")
+```
+
+
+```{r echo=FALSE,warning=FALSE,message=FALSE}
+summary_of_five_years_age <- summary_of_five_years %>% 
+  pivot_longer(c(IncidencesAgeUnder5:IncidencesAllAges), names_to = "IncidencesAge", values_to = "count")  
+
+  summary_of_five_years_rates <- summary_of_five_years %>% 
+        pivot_longer(c(IncidenceRateAgeUnder5:IncidenceRateAge90AndOver), names_to = "IncidenceRateAge", values_to = "rate" )
+```
+
+
+```{r echo=FALSE,warning=FALSE,message=FALSE}
+summary_of_five_years_by_rates <- summary_of_five_years_rates %>% 
+  select(Year, IncidenceRateAge,rate,CancerSite)
+```
+
+
+```{r echo=FALSE,warning=FALSE,message=FALSE}
+# summary_of_five_years_by_rates%>% 
+#   mutate(IncidenceRateAge= factor(substring(IncidenceRateAge, first=14, last=26)))%>%
+#     group_by(IncidenceRateAge) %>% 
+#   summarise(rates = mean(rate)) %>% 
+#     ggplot() +
+#     aes(x= IncidenceRateAge, y=rates) +
+#    geom_point()+
+#     geom_line(group = 1)+
+#    theme(axis.text.x = element_text(angle = 45))
+```
+
+```{r echo=FALSE,warning=FALSE,message=FALSE}
+summary_of_five_years_by_rates <- summary_of_five_years_by_rates %>% 
+  mutate(IncidenceRateAge = substring(IncidenceRateAge, first = 14, last = 26)) %>% 
+    mutate(
+       IncidenceRateAge = case_when(
+       IncidenceRateAge == "AgeUnder5" ~ "Under 5",
+       IncidenceRateAge == "Age5To9" ~ "5 - 9",
+       IncidenceRateAge == "Age10To14" ~ "10 - 14",
+       IncidenceRateAge == "Age15To19" ~ "15 - 19",
+       IncidenceRateAge == "Age20To24" ~ "20 - 24",
+       IncidenceRateAge == "Age25To29" ~ "25 - 29",
+       IncidenceRateAge == "Age30To34" ~ "30 - 34",
+       IncidenceRateAge == "Age35To39" ~ "35 - 39",
+       IncidenceRateAge == "Age40To44" ~ "40 - 44",
+       IncidenceRateAge == "Age45To49" ~ "45 - 49",
+       IncidenceRateAge == "Age50To54" ~ "50 - 54",
+       IncidenceRateAge == "Age55To59" ~ "55 - 59",
+       IncidenceRateAge == "Age60To64" ~ "60 - 64",
+       IncidenceRateAge == "Age65To69" ~ "65 - 69",
+       IncidenceRateAge == "Age70To74" ~ "70 - 74",
+       IncidenceRateAge == "Age75To79" ~ "75 - 79",
+       IncidenceRateAge == "Age80To84" ~ "80 - 84",
+       IncidenceRateAge == "Age85To89" ~ "85 - 89",
+       IncidenceRateAge == "Age90AndOver" ~ "90 and over"
+      
+      )) %>%
+  mutate(IncidenceRateAge = factor(IncidenceRateAge, levels = c(
+                                "Under 5",
+                                "5 - 9" ,
+                                "10 - 14",
+                                "15 - 19",
+                                "20 - 24",
+                                "25 - 29",
+                                "30 - 34",
+                                "35 - 39",
+                                "40 - 44",
+                                "45 - 49",
+                                "50 - 54",
+                                "55 - 59",
+                                "60 - 64",
+                                "65 - 69",
+                                "70 - 74",
+                                "75 - 79",
+                                "80 - 84",
+                                "85 - 89",
+                                "90 and over"))) 
+
+summary_of_five_years_by_rates_graph <- summary_of_five_years_by_rates %>% 
+  group_by(IncidenceRateAge) %>% 
+  summarise(rates = mean(rate))
+
+summary_of_five_years_by_rates_graph %>% 
+    ggplot() +
+  aes(x = IncidenceRateAge, y = rates) +
+  geom_col() +
+   theme(axis.text.x = element_text(angle = 45)) +
+  labs(
+    title = "Average cases by age between 2015-2019",
+    x = "Age",
+    y = "Average Rate"
+  )
+```
+
+
+The total number of cases is been increased by the age, the cases increased as the age increases until reach the peak at age 85-89.
+
+```{r echo= FALSE,fig.height=8, fig.width = 12, message=FALSE, warning=FALSE }
+ 
+summary_of_five_years_ratio <- summary_of_five_years_rates %>% 
+  filter(Sex == "Male" | Sex == "Female") %>% 
+ group_by(CancerSite, Sex) %>% 
+ summarise(n = n()) %>% 
+ group_by(CancerSite) %>% 
+ mutate(Total_per_CancerSite = sum(n), 
+ Ratio = round(n / Total_per_CancerSite, 2)) 
+
+summary_of_five_years_ratio %>% 
+  ggplot(aes(y = CancerSite, x = Ratio, fill = Sex)) + 
+    geom_bar( stat = "identity",
+           width = 0.9) +
+     labs(title = "cancer types by gender",
+          subtitle = "2015 to 2019",
+         x = "Ratio",
+        y = "Cancer Site")
+  # theme(axis.text.x = element_text(angle = 45)) 
+  # facet_wrap(~CancerSite) +
+  #  labs(title = "Title",
+  #       x = "",
+  #       y = "")
+  
+  # summary_of_five_years_ratio %>% 
+  # distinct(CancerSite) %>% 
+  # nrow()
+```
+
+The graph above shows the number of cases between 2015 – 2019 in the whole types of cancer, also the graph shows the ratio between men and women. It’s clear from the plot that’s most cancers are effect both gender equally, however, some type of cancer are affects one gender more than other.
+
+
+```{r echo= FALSE,fig.height=8, fig.width = 13, message=FALSE,warning=FALSE }
+cancer_ration_by_regin <- cancer_by_regin %>% 
+   group_by(Region,CancerSite) %>% 
+ summarise(n = n()) %>% 
+group_by(Region) %>% 
+ mutate(Total_per_CancerSite = sum(n), 
+ Ratio = round(n / Total_per_CancerSite, 2)) 
+
+cancer_ration_by_regin %>% 
+ ggplot(aes(y = CancerSite, x = Ratio, fill = Region)) + 
+    geom_bar(stat = "identity") +
+     labs(title = "cancer types by Region",
+          subtitle = "2015 to 2019",
+         x = "Ratio",
+        y = "Cancer Site")
+```
+
+
+```{r echo= FALSE,fig.height=8, fig.width = 12,message=FALSE,  }
+ summary_of_five_years_by_rates %>% 
+  filter( CancerSite == "Cervix uteri") %>% 
+    ggplot() +
+  aes(x = IncidenceRateAge, y = rate) +
+  geom_col() +
+   theme(axis.text.x = element_text(angle = 45)) +
+  labs(
+    title = "Female Average Cervix uteri cases  between 2015-2019",
+    x = "Age",
+    y = "Average Rate"
+  )
+```
+
+
+
+The plot above shows one type of cncer that effect the women most, the graph shows the number of cases between 2015 -2019 by ages. You can see that most ages are efected   the age between 25-49, age 49 and obove are also shows thats women in that age still effect them but not the same as 25-49.
+
+```{r echo= FALSE,fig.height=8, fig.width = 13, message=FALSE,warning=FALSE }
+ # cancer_by_regin %>%
+ #  filter(Sex == "All") %>% 
+ #    select(Region,CancerSite,CrudeRate) %>% 
+ # group_by(CancerSite) %>% 
+ # summarise(n = n())  
+ 
+```
+

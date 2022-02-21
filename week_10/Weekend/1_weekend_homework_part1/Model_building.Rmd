@@ -1,0 +1,156 @@
+---
+title: "Model Building"
+author: "Aboubakar Hameed"
+date: "18/02/2022"
+output:
+   html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    df_print: paged
+    pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+ 
+ 
+```{r}
+library(tidyverse)
+library(lubridate) 
+library(leaps)
+library(caret)
+```
+ 
+# MPV
+
+## Loading dataset
+```{r}
+avocados <- read_csv("data/avocado.csv")
+avocados
+```
+ 
+```{r}
+glimpse(avocados)
+```
+ 
+```{r}
+#Tidy up data. changing region, type and month as factor, as they are categorical number. Also will extract month as factor from date since we have year column.
+
+tidy_avocados <- avocados %>% 
+  mutate(
+         #month = as.factor(month(Date)),
+         year = as.factor(year),
+        # region = as.factor(region),
+         type = as.factor(type)
+         ) %>% 
+  select(-...1, -Date, -region) %>% 
+  janitor::clean_names() 
+
+tidy_avocados  %>% 
+  dim()
+```
+ 
+```{r}
+regsubsets_forward <- regsubsets(average_price ~ ., data = tidy_avocados, nvmax = 10, method = "forward")
+```
+ 
+ 
+```{r}
+sum_regsubsets_forward <- summary(regsubsets_forward)
+sum_regsubsets_forward
+```
+ 
+To decide how many variables to pick, will plot the adjusted r2
+```{r}
+plot(regsubsets_forward, scale = "adjr2")
+```
+ 
+ 
+ 
+From the plot below the  r2 is increases as the number of predictors in the model increases, but fromthe last 2 or 3 the predictors stay the same.
+```{r}
+plot(sum_regsubsets_forward$rsq, type = "b")
+```
+ 
+The plot below will show the penalised measure of fit, the graph show that a few predictions 3 or 4 has the lowest BIC.
+```{r}
+plot(sum_regsubsets_forward$bic, type = "b")
+```
+ 
+ 
+```{r}
+summary(regsubsets_forward)$which[6,]
+```
+ 
+ # From the summaray above and the adjr2 plot we can see that these the best predictions of our model with True  (x4046,x4225,XLarge Bags, typeorganic, year2016 and year2017).
+ 
+ Now will use K-fold cross validation to evaluate our model, will set K = 10 in our test.
+ 
+```{r}
+cv_10_fold <- trainControl(method = "cv", # cross-validation
+                           number = 10, # 10-fold
+                           savePredictions = TRUE) 
+
+model <- train(average_price ~ x4046 + x4225 + x_large_bags + type + year,
+               data = tidy_avocados,
+               trControl = cv_10_fold, # use options defined above
+               method = 'lm')
+
+summary(model)
+```
+ 
+ we will extract the all  predictions from our model:
+```{r}
+model$pred
+```
+ 
+The error across each fold in the model
+```{r}
+model$resample
+```
+ 
+ In order to compare our models with all prediction mpdel,we need to calculate the average error and the average r-squared values:
+
+ 
+```{r}
+mean(model$resample$RMSE)
+```
+ 
+```{r}
+mean(model$resample$Rsquared)
+```
+ 
+ 
+ 
+In order to ccompare the average error and the average r-squared values with the model which has all the variables will do the test below:
+
+```{r}
+cv_10_fold <- trainControl(method = "cv", 
+                           number = 10, 
+                           savePredictions = TRUE)
+
+model <- train(average_price ~ .,
+               data = tidy_avocados,
+               trControl = cv_10_fold,
+               method = 'lm')
+
+mean(model$resample$RMSE)
+
+```
+
+```{r}
+mean(model$resample$Rsquared)
+```
+ 
+ 
+# conclusion:
+This is not our expect, as the well fitted model we did has a higher error and a lower r-squared value than the one with all the predictors these results almost the same which are too close to each others, so that the model is stable, but not acceptable model. I think to make our model even better, we might need to include more predictors or variables.
+
+Notice: I decide to remove region and month from the model as end up with too many dummy variables.
+
+ 
+ 
+ 
