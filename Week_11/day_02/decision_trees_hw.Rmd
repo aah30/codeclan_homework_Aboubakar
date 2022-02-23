@@ -1,0 +1,184 @@
+---
+title: "Decision trees"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    df_print: paged
+  pdf_document: default
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+```{r}
+library(rpart)
+library(rpart.plot)
+library(tidyverse)
+library(caret)
+library(GGally)
+```
+ 
+```{r}
+titanic_set <- read_csv('data/titanic_decision_tree_data.csv')
+
+shuffle_index <- sample(1:nrow(titanic_set))
+
+# shuffle the data so class order isn't in order - need this for training/testing split later on 
+titanic_set <- titanic_set[shuffle_index, ]
+```
+
+# MVP
+## Question 1 
+
+<details>
+<summary>**Answer**</summary>
+This is my code and its work fine! but when see the note I found in as factor levels and Im not sure what it does so I use the homework code.
+```{r}
+# titanic_set %>% 
+#   filter(survived != "NA") %>% 
+#   mutate(sex =   as.factor(sex),
+#          survived = as.factor(survived),
+#          pclass = as.factor(pclass),
+#          embarked = as.factor(embarked),
+#          age_status = case_when(
+#             age <= 16 ~ "child",
+#             TRUE     ~  "adult"
+#          )) %>% 
+#   na.omit() %>% 
+#   select(-...1, -passenger_id, -name, -ticket, -fare, -cabin)
+
+
+titanic_clean <- titanic_set %>%
+  filter(survived %in% c(0,1)) %>%
+# Convert to factor level
+    mutate(sex = as.factor(sex), 
+           age_status = as.factor(if_else(age <= 16, "child", "adult")),
+         class = factor(pclass, levels = c(3,2,1), labels = c("Lower", "Middle", "Upper")), 
+           survived_flag = factor(survived, levels = c(0,1), labels = c("No", "Yes")), 
+           port_embarkation = as.factor(embarked)) %>%
+  select(sex, age_status, class, port_embarkation, sib_sp, parch, survived_flag) %>%
+  na.omit()
+titanic_clean
+```
+
+
+
+</details>
+
+## Question 2 
+
+<details>
+<summary>**Answer**</summary>
+
+```{r}
+glimpse(titanic_clean)
+```
+
+```{r}
+
+ggpairs(titanic_clean)
+
+```
+
+The graph shows that male, adult, class lower, S embarkation has strong correlation with survived flag.
+</details>
+
+
+
+</details>
+
+## Question 3 
+
+<details>
+<summary>**Answer**</summary>
+
+```{r}
+set.seed(19)
+
+n_data <- nrow(titanic_clean)
+
+# create 20% a test sample index
+test_index <- sample(1:n_data, size = n_data*0.2)
+
+# create test set
+titanic_test  <- slice(titanic_clean, test_index)
+
+# create training set
+titanic_train <- slice(titanic_clean, -test_index)
+```
+
+We can check that our test and training sets have similar proportions.
+
+```{r}
+titanic_test %>%
+ janitor::tabyl(survived_flag)
+```
+
+ 
+```{r}
+titanic_train %>%
+ janitor::tabyl(survived_flag)
+```
+ the gap between the two are smaller when we see the percent so its split and balanced.
+
+</details>
+
+## Question 4
+
+<details>
+<summary>**Answer**</summary>
+
+```{r}
+titanic_fit <- rpart(
+  formula = survived_flag ~ ., 
+  data = titanic_train, 
+  method = 'class'
+)
+
+rpart.plot(titanic_fit, 
+           yesno = 2, 
+           fallen.leaves = TRUE, 
+           faclen = 6, 
+           digits = 4)
+```
+
+</details>
+
+## Question 5
+
+<details>
+<summary>**Answer**</summary>
+
+
+i think the important variables are  Male and lower class as the survived about 21.40 %. each node  show the precentage whether survived or not. first node start with no (died) 39%. The highest chance of surviving who male, adult, class lower, S embarkation 
+
+
+</details>
+
+## Question 6
+
+<details>
+<summary>**Answer**</summary>
+Now we will use our trained model to to create predictions on test dataset using add_predictions() function.
+```{r}
+ library(modelr)
+
+# add the predictions
+titanic_test_pred <- titanic_test %>%
+  add_predictions(titanic_fit, type = 'class')
+titanic_test_pred
+```
+
+Now we will the confusion matrix to check the predictive performance.
+
+The first tabe show the The expected value for example 27 false positives and 3 being false negatives. the Accuracy of our prediction is high 0.7887. Sensitivity shows the probability  of correctly predicting whether in the test set survived or not. Also our confidence level is high as the P value is too small 8.343e-10.
+```{r}
+confusionMatrix(titanic_test_pred$pred, titanic_test_pred$survived_flag)  
+```
+
+</details>
+
