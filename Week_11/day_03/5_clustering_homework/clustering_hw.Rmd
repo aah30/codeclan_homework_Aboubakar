@@ -1,0 +1,130 @@
+---
+title: "Clustering homework"
+author: "A Hameed"
+date: "24/02/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+ 
+```{r}
+library(tidyverse)
+library(janitor)
+```
+ 
+# loading customers data and cleanning names
+```{r}
+customers <- read_csv("data/mall_customers.csv") %>% 
+  clean_names()
+
+customers
+```
+ 
+# check if any na
+```{r}
+any(is.na(customers))
+```
+ 
+ 
+# Select only numerical column
+```{r}
+customers <- customers %>% 
+  select(-customer_id, -gender)  
+  #column_to_rownames("gender")
+customers
+```
+ 
+# Scaling data 
+```{r}
+customers_scaled <- customers %>% 
+  mutate_all(scale)
+customers_scaled
+```
+ 
+# checking the relations between spending score and annual income 
+It is look like a meaningful and we could make cluster as there is a gap between data.
+```{r}
+customers_scaled %>% 
+ggplot( aes(y = annual_income_k, x = spending_score_1_100)) +
+  geom_point()
+```
+ 
+ # Perform k-means clustering and chose a value of k.
+ 
+we will use the 3 different method to check how many K should we use in customer data.
+```{r}
+library(factoextra)
+ fviz_nbclust(customers_scaled, 
+             kmeans, 
+             method = "wss", 
+             nstart = 25)
+```
+ 
+ 
+```{r}
+fviz_nbclust(customers_scaled, 
+             kmeans, 
+             method = "silhouette", 
+             nstart = 25)
+```
+ 
+ 
+ 
+```{r}
+fviz_nbclust(customers_scaled, 
+             kmeans, 
+             method = "gap_stat", 
+             nstart = 25, 
+             k.max = 10)
+```
+ 
+ The 3 different method confirm that the K should be 6. 
+ 
+ 
+ 
+# Visualise the clustering k = 6.
+```{r}
+library(broom)
+
+ max_k <- 6 
+
+k_clusters <- tibble(k = 1:max_k) %>%
+  mutate(
+    kclust = map(k, ~ kmeans(customers_scaled, .x, nstart = 25)), 
+    tidied = map(kclust, tidy),
+    glanced = map(kclust, glance),
+    augmented = map(kclust, augment, customers)
+  )
+
+k_clusters
+```
+ 
+```{r}
+k_clusters %>% 
+  unnest(cols = c(augmented)) %>%
+  ggplot() +
+  aes(y = spending_score_1_100,
+      x = annual_income_k,
+      color = .cluster) +
+  geom_point(aes(color = .cluster))
+```
+ 
+ # Do you think the clustering seems a good fit for this data?
+ 
+No as the blue and red clusters are mixed together I think the not good fit might k =4 or less will be a good fit.
+below I tried to test the K manually 3,4 and 5. I can't find the good one to fit the data.
+
+```{r}
+k_clusters %>% 
+  unnest(cols = c(augmented)) %>%
+  filter(k <= 3) %>%
+  ggplot() +
+  aes(y = spending_score_1_100,
+      x = annual_income_k,
+      color = .cluster) +
+  geom_point(aes(color = .cluster))
+```
+
