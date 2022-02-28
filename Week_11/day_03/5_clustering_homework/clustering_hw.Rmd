@@ -32,7 +32,7 @@ any(is.na(customers))
 # Select only numerical column
 ```{r}
 customers <- customers %>% 
-  select(-customer_id, -gender)  
+  select(-customer_id, -gender, -age)  
   #column_to_rownames("gender")
 customers
 ```

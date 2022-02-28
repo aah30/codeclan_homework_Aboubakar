@@ -1,0 +1,176 @@
+---
+title: "Logistic regression homework"
+author: "A Hameed"
+date: "27/02/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+ 
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(GGally)
+library(broom)
+library(pROC)
+library(modelr)
+```
+
+
+```{r}
+customers <- read_csv("data/orange_juice.csv") %>% 
+            clean_names()
+
+head(customers)
+```
+
+```{r}
+glimpse(customers)
+```
+
+```{r}
+# Let’s see if we have any missing values:
+
+summary(customers)
+```
+
+Create a purchase mm column and turn special_ch and special mm to logical column t or f, it's more meaningful than 0 and 1 for the model.
+```{r}
+customers <- customers %>% 
+  mutate(purchase_mm = as.factor( if_else(purchase == "MM","yes","no")),
+         store7 = as.factor(store7),
+         special_mm = as.factor( if_else(special_mm == "1","t","f")),
+         special_ch = as.factor( if_else(special_ch == "1","t","f"))
+         )
+ 
+customers
+```
+
+Will not select the purchase and store id and decided to leave the week of purchase column as numeric to see if give a value to the model.
+```{r}
+customers <- customers %>% 
+  select(-purchase, -store_id)
+customers
+```
+
+ 
+
+Now we will see the relationships with purchase mm with other variables and We will split the variables into some sets
+```{r}
+
+split1 <- customers %>%
+  select(weekof_purchase, price_ch, price_mm, disc_ch, disc_mm, purchase_mm)
+
+split2 <- customers %>%
+  select(special_ch, special_mm, loyal_ch, sale_price_mm, sale_price_ch,  purchase_mm)
+
+split3 <- customers %>%
+  select(price_diff, store7, pct_disc_mm, pct_disc_ch, list_price_diff, store, purchase_mm)
+
+```
+
+
+```{r, fig.height=6}
+split1 %>%
+  ggpairs()
+```
+
+
+```{r, fig.height=6}
+split2 %>%
+  ggpairs()
+```
+
+
+
+```{r, fig.height=6}
+split3 %>%
+  ggpairs()
+```
+
+
+From split 1, we observe significant looking relationships between purchase_mm, price_mm, disc_mm  and disc_ch and from split 2, with loyal_ch and from split 3, with pct_disc_mm, pct_disc_ch and store
+
+```{r}
+mod1_1pred_disc_mm <- glm(purchase_mm ~ disc_mm, data = customers, family = binomial(link = 'logit'))
+
+mod2_1pred_loyal_ch <- glm(purchase_mm ~ loyal_ch, data = customers, family = binomial(link = 'logit'))
+
+mod3_1pred_pct_disc_mm <- glm(purchase_mm ~ pct_disc_mm, data = customers, family = binomial(link = 'logit'))
+```
+
+
+```{r}
+clean_names(tidy(mod1_1pred_disc_mm))
+```
+
+```{r}
+clean_names(tidy(mod2_1pred_loyal_ch))
+```
+
+
+```{r}
+clean_names(tidy(mod3_1pred_pct_disc_mm))
+#summary(mod3_1pred_pct_disc_mm)
+```
+
+
+
+
+The p-values for the 3 models  are less α=0.05 so its statistically significant.
+
+
+
+Now we will Plot ROC curves for each classifier and show the AUC values for each classifiers to see which of them is the best.
+
+
+```{r}
+     mod1 <- customers %>%
+  add_predictions(mod1_1pred_disc_mm, type = "response")
+
+ mod2 <- customers %>%
+  add_predictions(mod2_1pred_loyal_ch, type = "response")
+
+   mod3 <- customers %>%
+  add_predictions(mod3_1pred_pct_disc_mm, type = "response")
+
+roc_obj_mod1 <-  mod1 %>%
+  roc(response = purchase_mm, predictor = pred)
+
+roc_obj_mod2 <- mod2 %>%
+  roc(response = purchase_mm, predictor = pred)
+ 
+roc_obj_mod3 <- mod3 %>%
+  roc(response = purchase_mm, predictor = pred)
+```
+
+
+```{r}
+roc_curve <- ggroc(
+  data = list(
+    mod1 = roc_obj_mod1, 
+    mod2 = roc_obj_mod2,
+    mod3 = roc_obj_mod3
+  ), 
+  legacy.axes = TRUE) +
+  coord_fixed()
+
+roc_curve
+```
+
+
+Let’s confirm this with AUC values that the model 2 ROC curves with loyal_ch is the best classifier.
+
+```{r}
+auc(roc_obj_mod1)
+ 
+auc(roc_obj_mod2)
+ 
+auc(roc_obj_mod3)
+```
+
+The Area under the curve of model2 is 87% which is the best of the 3 models.
